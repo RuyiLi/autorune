@@ -1,0 +1,8 @@
+venv/
+dist/
+build/
+__pycache__/
+
+events.py
+index.html
+main.spec
