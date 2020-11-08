@@ -1,0 +1,212 @@
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet">
+<style>
+    * {
+        font-family: 'Poppins', sans-serif !important;
+        color: #ededed;
+        font-weight: 400 !important;
+    }
+
+    html, body {
+        margin: 0;
+        padding: 0;
+        background: url('./img/aram.jpg'); 
+        background-position: center;
+        overflow: hidden;
+    }
+
+    button#close {
+        background-color: rgb(31, 31, 31);
+        outline: none;
+        border: none;
+        text-align: center;
+        font-size: 16px;
+        padding: 2px 24px;
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 999;
+    }
+
+    button#close:hover {
+        background-color: rgb(216, 18, 18);   
+    }
+
+    img#icon {
+        position: fixed;
+        top: 9px;
+        left: 10px;
+        width: 20px;
+        height: 20px;
+    }
+
+    h5#title {
+        position: fixed;
+        margin: 0;
+        padding: 0;
+        top: 9px;
+        left: 30px;
+        font-weight: 400;
+        background: #b63d05;
+        padding: 0 5px;
+    }
+
+    h5#runepage {
+        position: fixed;
+        margin: 0;
+        padding: 0;
+        top: 12px;
+        left: 50%;
+        font-size: 17px;
+        transform: translateX(-50%);
+        border-left: 4px solid #ececec;
+        border-right: 4px solid #ececec;
+        background: transparent;
+        border-radius: 5px;
+        padding: 0 10px;
+        font-weight: 300;
+    }
+
+    div#container {
+        text-align: center;
+        background: url('./img/cover.png'); 
+    }
+
+    div#yeschamp {
+        padding: 20px;
+        padding-top: 45px;
+        width: 100%;
+    }
+
+    div#yeschamp table {
+        width: 90%;
+    }
+
+    td img {
+        width: 35px;
+        height: 35px;
+    }
+
+    td {
+        text-align: center;
+    }
+
+    #avaparent {
+        width: 140px;
+    }
+
+    #champion-avatar {
+        width: 120px;
+        height: 120px;
+    }
+
+    .runestyle, .keystone {
+        width: 45px;
+        height: 45px;
+    }
+
+    .shard {
+        width: 25px;
+        height: 25px;
+    }
+    
+    .hidden {
+        display: none;
+    }
+</style>
+
+
+<img id="icon" src="./img/dango.png">
+<h5 id="title">AutoRune</h4>
+<h5 id="runepage"></h5>
+<button id="close">X</button>
+<div id="container">
+    <h1 id="nochamp">No champion selected.</h1>
+    <div id="yeschamp" class="hidden">
+        <table>
+            <tr>
+                <td id="avaparent" rowspan="2">
+                    <img id="champion-avatar">
+                </td>
+                <!-- Primary Style -->
+                <td class="runestyleparent"><img class="runestyle"></td>
+                <!-- Primary Runes -->
+                <td class="keystone"><img></td>
+                <td><img></td>
+                <td><img></td>
+                <td><img></td>
+                <td></td>
+            </tr>
+            <tr>
+                <!-- Secondary Style -->
+                <td class="runestyleparent"><img class="runestyle"></td>
+                <!-- Secondary Runes -->
+                <td><img></td>
+                <td><img></td>
+                <!-- Shards -->
+                <td><img class="shard"></td>
+                <td><img class="shard"></td>
+                <td><img class="shard"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+
+<script>
+    const $ = document.querySelector.bind(document);
+    const ddragonAvatarBase = 'http://ddragon.leagueoflegends.com/cdn/10.22.1/img/champion'
+
+    window.addEventListener('pywebviewready', function() {
+        console.log('pywebview initialized.')
+
+        $('#close').addEventListener('click', function () {
+            pywebview.api.close();
+        });
+
+        
+        // const ws = new WebSocket('wss://riot:VvvPD-CVn5OSA9nchASBLg@127.0.0.1:12345', 'wamp', {
+        //     rejectUnauthorized: false,
+        // });
+
+        // setInterval(function () {
+        //     console.log(ws.readyState);
+        // }, 1000);
+
+        // ws.addEventListener('open', function () {
+        //     console.log('nice');
+        // });
+
+        // ws.addEventListener('error', function (err) {
+        //     console.log('WS Error:');
+        //     console.log(err.target);
+        // });
+    });
+
+    const container = $('#container');
+    container.style.width = `${window.innerWidth}px`;
+    container.style.height = container.style.lineHeight = `${window.innerHeight}px`;
+
+    const noChamp = $('#noChamp');
+    const yesChamp = $('#yesChamp');
+    const pageName = $('#runepage');
+    const avatar = $('#champion-avatar');
+    const runes = yesChamp.querySelectorAll('td img')
+
+    function updateChampion (champion) {
+        if (!champion) {
+            noChamp.classList.remove('hidden');
+            yesChamp.classList.add('hidden');
+            pageName.innerText = '';
+        } else {
+            noChamp.classList.add('hidden');
+            yesChamp.classList.remove('hidden');
+
+            pageName.innerText = champion.pageName;
+            avatar.src = `${ddragonAvatarBase}/${champion.id}.png`
+            
+            for (let i = 1; i < runes.length; i++) {
+                runes[i].src = `./img/perks/${champion.runes[i - 1]}.png`;
+            }
+        }
+    }
+</script>
